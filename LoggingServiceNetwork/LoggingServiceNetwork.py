@@ -10,7 +10,18 @@
 #import libraries
 import socket
 import sys
+import logging
 
+"""
+	Logging basics/ Advanced:	https://www.youtube.com/watch?v=-ARI4Cz-awo&t=741s  
+								https://www.youtube.com/watch?v=jxmzY9soFXg&t=1007s
+	DEBUG:		Detailed information, typically of interest only when diagnosing problems
+	INFO:		Confirmation that things are working as expected
+	WARNING:	An indication that comething unexpected happened, or indicative of some problem on the near future
+				(e.g. 'disk space low'). The software is still working as expected.
+	ERROR:		Due to a more serious problem, the software has not been able to perform some function.
+	CRITICAL:	A serious error, indicating that the program itself may be unable to continue rinning. 
+"""
 
 #Set up TCP Server https://pymotw.com/2/socket/tcp.html
 
