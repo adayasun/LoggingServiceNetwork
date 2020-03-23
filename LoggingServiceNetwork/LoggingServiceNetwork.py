@@ -1,7 +1,7 @@
 """
 	FILE			: LoggingServiceNetwork.py
 	PROJECT			: SENG2040 - Assign-03 (A-04)
-	PROGRAMMER		: Amy Dayasundara
+	PROGRAMMER		: Amy Dayasundara, Paul Smith
 	FIRST VERSION	: 2020-03-17
 	DESCRIPTION		:
 		Service file for logging messages using TCP.
@@ -30,29 +30,28 @@ socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #Binding to port
 serverAddress = ('localhost', 10000) #change hardcoded path to something else // use commandline to do that
-print >>sys.stderr, 'starting up on %s port %s' % server_address
-socketConnection.bind(server_address)
+print('starting up on %s port %s', serverAddress)
+socketConnection.bind(serverAddress)
 
 #Listen for connections
 socketConnection.listen(1)
 
 while True:
 	#Wait for a connection
-	print >>sys.stderr, 'waiting for a connection'
-	connection = socketConnection.accept()
-	clientAddress = socketConnection.accept()
+	print( 'waiting for a connection ... ')
+	(connection, clientAddress) = socketConnection.accept()
 
 	try:
-		print>>sys.stderr, 'connection from', clientAddress
+		print( 'connection from %s', clientAddress)
 		#Recieve data to be input into logfile
 		while True:
-			data = connection.recv(16)
-			print >>sys.stderr, 'received "%s"' % data
+			data = connection.recv(1024)
+			print( 'received "%s"', data)
 			if data:
-				print >>sys.stderr, 'sending data back to the client'
+				print('sending data back to the client')
 				connection.sendall(data)
 			else:
-				print >>sys.stderr, 'no more data from', client_address
+				print ('no more data from %s', clientAddress)
 				break
 	finally:
         # Clean up the connection
