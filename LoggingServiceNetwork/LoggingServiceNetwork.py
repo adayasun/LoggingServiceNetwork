@@ -104,6 +104,10 @@ while True:
 		
 		while True:
 			data = connection.recv(1024)
+			#check if it is a new or existing connection based 
+			#off file handler list? -- CREATE THREAD to run 
+			#multiple clients
+
 			print( 'received: ', data)
 			if data:
 				#Recieve data to be input into logfile
