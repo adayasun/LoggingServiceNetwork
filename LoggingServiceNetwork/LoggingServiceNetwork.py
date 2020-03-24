@@ -36,7 +36,7 @@ import math
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
-LOG_FORMAT = logging.Formatter('%(levelname)s %(asctime)s = %(message)s')
+LOG_FORMAT = logging.Formatter('%(levelname)s %(asctime)s : %(message)s')
 
 #adding a file handler to the logger
 file_handler = logging.FileHandler('..\\..\\Newtest.Log')
@@ -61,6 +61,25 @@ def quadratic_formula(a,b,c):
 roots = quadratic_formula(1,0,-4)
 print(roots)
 
+#PARSE INFO INTO LOGGER 
+#NEED TO KNOW WHICH ONE TO USE TO LOG LEVEL
+def parseLogInfo(logInfo):
+	levelType = logInfo.get("level")
+	levelMsg = logInfo.get("message")
+	if levelType == "DEBUG":
+		logger.debug(levelMsg)
+	elif levelType == "INFO":
+		print(levelType)
+		logger.info(levelMsg)
+	elif levelType == "WARNING":
+		print(levelType)
+		logger.warning(levelMsg)
+	elif levelType == "ERROR":
+		print(levelType)
+		logger.error(levelMsg)
+	elif levelType == "CRITICAL":
+		print(levelType)
+		logger.critical(levelMsg)
 
 ###Set up TCP Server https://pymotw.com/2/socket/tcp.html
 
@@ -91,6 +110,7 @@ while True:
 				print('sending data back to the client')
 				connection.sendall(data)
 				loggingInfo = json.loads(data.decode('utf-8'))
+				parseLogInfo(loggingInfo)
 			else:
 				print ('no more data from', clientAddress)
 				break
