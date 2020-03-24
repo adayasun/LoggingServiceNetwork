@@ -11,19 +11,58 @@
 import socket
 import sys
 import logging
+import json
+
+
+#For testing purpose
+import math
+
+#loggingInfo = { }
 
 """
 	Logging basics/ Advanced:	https://www.youtube.com/watch?v=-ARI4Cz-awo&t=741s  
 								https://www.youtube.com/watch?v=jxmzY9soFXg&t=1007s
-	DEBUG:		Detailed information, typically of interest only when diagnosing problems
-	INFO:		Confirmation that things are working as expected
-	WARNING:	An indication that comething unexpected happened, or indicative of some problem on the near future
-				(e.g. 'disk space low'). The software is still working as expected.
-	ERROR:		Due to a more serious problem, the software has not been able to perform some function.
-	CRITICAL:	A serious error, indicating that the program itself may be unable to continue rinning. 
+
+	0  NOTSET
+	10 DEBUG:		Detailed information, typically of interest only when diagnosing problems
+	20 INFO:		Confirmation that things are working as expected
+	30 WARNING:		An indication that comething unexpected happened, or indicative of some problem on the near future
+					(e.g. 'disk space low'). The software is still working as expected.
+	40 ERROR:		Due to a more serious problem, the software has not been able to perform some function.
+	50 CRITICAL:	A serious error, indicating that the program itself may be unable to continue rinning. 
 """
 
-#Set up TCP Server https://pymotw.com/2/socket/tcp.html
+###Play with logger
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.INFO)
+
+LOG_FORMAT = logging.Formatter('%(levelname)s %(asctime)s = %(message)s')
+
+#adding a file handler to the logger
+file_handler = logging.FileHandler('..\\..\\Newtest.Log')
+file_handler.setFormatter(LOG_FORMAT)
+logger.addHandler(file_handler)
+
+def quadratic_formula(a,b,c):
+		###Return the solutions to the equation ax^2 + bx + c = 0
+		logger.info("Quadratic_formula({0},{1},{2})".format(a, b, c))
+
+		#Compute the discriminant
+		disc = b^2 - 4*a*c
+
+		logger.debug("Compute the two roots")
+		root1 = (-b + math.sqrt(disc)) / (2*a)
+		root2 = (-b - math.sqrt(disc)) / (2*a)
+	
+		#Return the roots
+		logger.debug("# Return the roots")
+		return (root1, root2)
+
+roots = quadratic_formula(1,0,-4)
+print(roots)
+
+
+###Set up TCP Server https://pymotw.com/2/socket/tcp.html
 
 #Socket
 socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -43,15 +82,17 @@ while True:
 
 	try:
 		print( 'connection from %s', clientAddress)
-		#Recieve data to be input into logfile
+		
 		while True:
 			data = connection.recv(1024)
-			print( 'received "%s"', data)
+			print( 'received: ', data)
 			if data:
+				#Recieve data to be input into logfile
 				print('sending data back to the client')
 				connection.sendall(data)
+				loggingInfo = json.loads(data.decode('utf-8'))
 			else:
-				print ('no more data from %s', clientAddress)
+				print ('no more data from', clientAddress)
 				break
 	finally:
         # Clean up the connection
