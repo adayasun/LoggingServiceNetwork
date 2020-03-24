@@ -12,7 +12,7 @@ import socket
 import sys
 import logging
 import json
-
+from config import *
 
 #For testing purpose
 import math
@@ -81,20 +81,25 @@ def parseLogInfo(logInfo):
 		print(levelType)
 		logger.critical(levelMsg)
 
-###Set up TCP Server https://pymotw.com/2/socket/tcp.html
+###Set up TCP Server https://pymotw.com/2/socket/tcp.html####
 
 #Socket
 socketConnection = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
+socketConnection.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1) #Overcome address already in use
 #Binding to port
-serverAddress = ('localhost', 10000) #change hardcoded path to something else // use commandline to do that
+serverAddress = (IP, PORT) #change hardcoded path to something else // use commandline to do that
 print('starting up on %s port %s', serverAddress)
 socketConnection.bind(serverAddress)
 
 #Listen for connections
 socketConnection.listen(1)
 
+#Create list to keep track of clients
+socketList = {serverAddress}
+clients = {}
+
 while True:
+
 	#Wait for a connection
 	print( 'waiting for a connection ... ')
 	(connection, clientAddress) = socketConnection.accept()
@@ -113,7 +118,7 @@ while True:
 				#Recieve data to be input into logfile
 				print('sending data back to the client')
 				connection.sendall(data)
-				loggingInfo = json.loads(data.decode('utf-8'))
+				loggingInfo = json.loads(data.decode('utf-8').strip())
 				parseLogInfo(loggingInfo)
 			else:
 				print ('no more data from', clientAddress)

@@ -1,3 +1,4 @@
 #Config file
 
-ip_config = 'localhost'
+IP = 'localhost'
+PORT = 10000
